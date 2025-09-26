@@ -39,6 +39,7 @@ checkpoint*.pth
 
 # 数据集相关
 *.npy
+data/
 
 # Jupyter Notebook
 .ipynb_checkpoints/
