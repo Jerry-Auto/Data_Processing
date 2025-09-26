@@ -41,8 +41,8 @@ checkpoint*.pth
 *.npy
 
 # Jupyter Notebook
-.ipynb_checkpoints
-
+.ipynb_checkpoints/
+.virtual_documents/
 # IDE配置
 .vscode/
 .idea/
