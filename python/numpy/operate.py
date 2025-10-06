@@ -90,7 +90,7 @@ a = np.array([[1, 2],
               [3, 4]])
 b = np.array([[5, 6], 
               [7, 8]])
-result_axis0 = np.stack((a,b,a,b), axis=0)
+result_axis0 = np.stack((a,b,a,b), axis=1)
 print(result_axis0.shape) # 输出 (2, 2, 2)
 print(result_axis0)
 print("\n-------------------------------\n")
