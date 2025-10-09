@@ -20,3 +20,8 @@ end = time.time()
 
 print(f"GPU 计算耗时: {end - start:.4f} 秒")
 print(f"结果前 5 个元素: {c[0, :5]}")
+
+""" GPU监控工具，推荐使用nvitop
+pip install nvitop
+nvitop -m full  #展示超完整的显卡信息
+"""
