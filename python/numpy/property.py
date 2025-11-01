@@ -55,3 +55,6 @@ print(f"深拷贝方法：")
 b=a.copy()
 b[1:3]=[15,16]
 print(f"{a},{b},{c}")
+
+randa=np.random.randint(0, 10)#左闭右开0～9
+
