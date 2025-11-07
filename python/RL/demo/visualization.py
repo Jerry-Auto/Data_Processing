@@ -3,7 +3,7 @@
 def agent_play(env,agent):
     observation, info = env.reset()
     done=False
-    for _ in range(100):
+    for _ in range(1000):
         while not done:
             action = agent.take_action(observation)
             next_state, reward, done, truncated, _= env.step(action)

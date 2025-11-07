@@ -3,7 +3,7 @@ from rl_utils import*
 from visualization import*
 
 lr = 2e-3
-num_episodes = 200
+num_episodes = 500
 hidden_dim = 128
 gamma = 0.98
 epsilon = 0.01
