@@ -3,6 +3,7 @@ import torch
 import torch.nn.functional as F
 import torch.nn as nn
 import numpy as np
+import torch.optim as optim
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import random
@@ -219,18 +220,28 @@ def train_expert_agent(env):
     return ppo_agent,return_list
 
 
-def sample_expert_data(env,agent,n_episode):
-    states = []
-    actions = []
+def sample_expert_data(env, agent, n_episode):
+    """按episode收集专家数据，保留轨迹结构"""
+    trajectories = []
+    
     for episode in range(n_episode):
         state = env.reset()[0]
         done = False
+        trajectory = {
+            'states': [],
+            'actions': []
+        }
         while not done:
             action = agent.take_action(state)
-            states.append(state)
-            actions.append(action)
-            next_state, reward, done, truncated ,_= env.step(action)
-            # 有些环境没有done，时间到了truncated为true
+            next_state, _, done, truncated, _ = env.step(action)
             done = done or truncated
+            trajectory['states'].append(state)
+            trajectory['actions'].append(action)
             state = next_state
-    return np.array(states), np.array(actions)
+        
+        # 转换为numpy数组
+        trajectory['states'] = np.array(trajectory['states'])
+        trajectory['actions'] = np.array(trajectory['actions'])
+        trajectories.append(trajectory)
+
+    return trajectories
