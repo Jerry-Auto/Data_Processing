@@ -1,6 +1,6 @@
 #include <OsqpEigen/OsqpEigen.h>
-#include <eigen3/Eigen/Dense>
-#include <eigen3/Eigen/Sparse>
+#include <Eigen/Dense>
+#include <Eigen/Sparse>
 #include <iostream>
 #include <string>
 

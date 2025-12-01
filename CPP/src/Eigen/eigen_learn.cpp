@@ -42,6 +42,7 @@ int demo()
     m << 1, 2, 7,
         3, 4, 8,
         5, 6, 9;
+    
     std::cout << m << std::endl;
     matrixXd1 = Eigen::Matrix3d::Random();
     m += matrixXd1;
