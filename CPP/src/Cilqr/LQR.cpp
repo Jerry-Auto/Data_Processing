@@ -233,7 +233,7 @@ void iterative_method_demo() {
             // 使用预定义的符号函数计算雅可比矩阵
             DM df_dx = jacobian_x(std::vector<DM>{Xc[k], Uc[k]})[0];
 
-            lambda[k] = lambda[k + 1] + dt * (dL_dx + mtimes(df_dx.T(), lambda[k + 1]));
+            lambda[k] = dL_dx + mtimes(df_dx.T(), lambda[k + 1]);
         }
 
         // 更新控制变量
@@ -289,7 +289,7 @@ void cilqr_demo() {
     int nx = 4;      // 状态维度
     int nu = 2;      // 控制维度
 
-    // 权重矩阵（与 casadi_demo.cpp 的 iLQR 示例一致的量级）
+    // 权重矩阵
     DM Q = DM::diag(DM(std::vector<double>{100.0, 100.0, 10.0, 1.0}));
     DM R = DM::diag(DM(std::vector<double>{1.0, 0.1}));
     DM Qf = Q * 10.0;
