@@ -1,0 +1,6 @@
+# model/multimodal.yaml
+_target_: main.MultimodalNetwork  # 指向我们在 main.py 里写的类
+# 变量插值：直接引用主配置文件最外层的全局参数
+embed_dim: ${global_dim}          
+num_heads: 2
+dropout: 0.1

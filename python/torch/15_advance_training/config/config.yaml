@@ -1,0 +1,27 @@
+# ==========================================
+# 多模态项目核心配置文件 (YAML 版本)
+# ==========================================
+
+project_name: "SigLIP_Multimodal_Project"
+version: "1.0.0"
+
+# 模型架构参数
+model:
+  name: "siglip-base-patch16"
+  embed_dim: 512
+  vision_layers: 12
+  text_layers: 12
+
+# 训练超参数
+train:
+  lr: 0.0005          # 学习率：SigLIP 大 Batch 训练时建议调小
+  batch_size: 128     # 批次大小
+  epochs: 50
+  device: "cuda"      # 硬件加速：'cuda', 'cpu', 或 'mps'
+
+# 数据集配置
+data:
+  dataset_names:
+    - "coco_caption"  # 支持列表形式定义多数据集
+    - "flickr30k"
+  num_workers: 4

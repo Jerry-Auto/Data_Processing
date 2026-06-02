@@ -47,6 +47,7 @@ data/
 # IDE配置
 .vscode/
 .idea/
+outputs/
 
 # 系统文件
 .DS_Store
@@ -54,3 +55,11 @@ Thumbs.db
 
 build/
 logs/
+wandb/
+wandb*/
+local_disk_*/
+my_large_disk_*/
+artifacts/
+deepspeed/
+autotuning_results/
+autotuning_exps/

@@ -1,0 +1,20 @@
+{
+    "project_name": "SigLIP_Multimodal_Project",
+    "version": "1.0.0",
+    "model": {
+        "name": "siglip-base-patch16",
+        "embed_dim": 512,
+        "vision_layers": 12,
+        "text_layers": 12
+    },
+    "train": {
+        "lr": 0.0005,
+        "batch_size": 128,
+        "epochs": 50,
+        "device": "cuda"
+    },
+    "data": {
+        "dataset_names": ["coco_caption", "flickr30k"],
+        "num_workers": 4
+    }
+}
