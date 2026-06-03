@@ -63,3 +63,12 @@ artifacts/
 deepspeed/
 autotuning_results/
 autotuning_exps/
+lstm_run/
+my_local_imdb_data/
+my_local_bert_tiny/
+hybrid_bert_results/
+notebook_logs/
+notebook_ckpts/
+exp_logs/
+final_notebook_model/
+checkpoints/
