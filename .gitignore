@@ -22,6 +22,7 @@ wheels/
 .installed.cfg
 *.egg
 MANIFEST
+*.onnx
 
 # 日志文件
 *.log
@@ -72,3 +73,6 @@ notebook_ckpts/
 exp_logs/
 final_notebook_model/
 checkpoints/
+lightning_logs/
+checkpoints_gan/
+libtorch/
