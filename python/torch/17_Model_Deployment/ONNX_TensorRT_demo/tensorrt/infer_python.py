@@ -1,19 +1,26 @@
 """
-TensorRT Python 推理示例
+TensorRT Python 推理示例（使用 torch 管理 CUDA 内存）
 
 前置条件:
-  pip install tensorrt pycuda
-  已构建 Engine（先运行 tensorrt/build_engine.py）
+  pip install tensorrt torch
+  已构建 Engine（先运行 tensorrt/build_engine.py 或 benchmark.py 会自动构建）
 """
 import os
+import warnings
 import numpy as np
 
-import tensorrt as trt
-import pycuda.driver as cuda
-import pycuda.autoinit  # noqa: F401  自动初始化 pycuda
+# 抑制 TRT 8.x 的 deprecation warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
+import torch
+import tensorrt as trt
 
 TRT_LOGGER = trt.Logger(trt.Logger.WARNING)
+
+
+def get_trt_major_version():
+    """获取 TensorRT 主版本号"""
+    return int(trt.__version__.split('.')[0])
 
 
 def load_engine(engine_path):
@@ -22,13 +29,13 @@ def load_engine(engine_path):
     with open(engine_path, "rb") as f:
         engine = runtime.deserialize_cuda_engine(f.read())
     print(f"Engine 加载成功: {engine_path}")
-    print(f"  输入数量: {engine.num_io_tensors}")
+    print(f"  输入输出数量: {engine.num_io_tensors if get_trt_major_version() >= 11 else engine.num_bindings}")
     return engine
 
 
 def infer(engine, input_np):
     """
-    单次推理
+    单次推理（使用 torch 管理 GPU 内存）
 
     Args:
         engine: TensorRT engine 对象
@@ -37,45 +44,65 @@ def infer(engine, input_np):
     Returns:
         numpy 输出数据
     """
+    major = get_trt_major_version()
     context = engine.create_execution_context()
 
-    # 获取输入输出名称和索引
-    input_name = None
-    output_name = None
-    for i in range(engine.num_io_tensors):
-        name = engine.get_tensor_name(i)
-        mode = engine.get_tensor_mode(i)
-        if mode == trt.TensorIOMode.INPUT:
-            input_name = name
-        else:
-            output_name = name
+    if major >= 11:
+        # TRT 11.x API
+        input_name = output_name = None
+        for i in range(engine.num_io_tensors):
+            name = engine.get_tensor_name(i)
+            if engine.get_tensor_mode(i) == trt.TensorIOMode.INPUT:
+                input_name = name
+            else:
+                output_name = name
 
-    # 设置动态 shape（如果 Engine 支持）
-    context.set_input_shape(input_name, input_np.shape)
+        context.set_input_shape(input_name, input_np.shape)
+        output_shape = context.get_tensor_shape(output_name)
 
-    # 获取输出形状
-    output_shape = context.get_tensor_shape(output_name)
-    output_size = int(np.prod(output_shape))
+        d_input = torch.empty(*input_np.shape, dtype=torch.float32, device="cuda")
+        d_output = torch.empty(*output_shape, dtype=torch.float32, device="cuda")
 
-    # 分配 GPU 显存
-    d_input = cuda.mem_alloc(input_np.nbytes)
-    d_output = cuda.mem_alloc(output_size * 4)  # float32 = 4 bytes
+        context.set_tensor_address(input_name, d_input.data_ptr())
+        context.set_tensor_address(output_name, d_output.data_ptr())
 
-    # 拷贝输入到 GPU
-    cuda.memcpy_htod(d_input, np.ascontiguousarray(input_np))
+        stream = torch.cuda.Stream()
+        d_input.copy_(torch.from_numpy(input_np).cuda())
+        context.execute_async_v3(stream.cuda_stream)
+        stream.synchronize()
 
-    # 设置 tensor 地址
-    context.set_tensor_address(input_name, int(d_input))
-    context.set_tensor_address(output_name, int(d_output))
+        return d_output.cpu().numpy()
 
-    # 执行推理
-    context.execute_async_v3(cuda.Stream().handle)
+    else:
+        # TRT 8.x API
+        input_name = output_name = None
+        input_idx = output_idx = -1
+        for i in range(engine.num_bindings):
+            name = engine.get_binding_name(i)
+            if engine.binding_is_input(i):
+                input_name = name
+                input_idx = i
+            else:
+                output_name = name
+                output_idx = i
 
-    # 拷贝输出回 CPU
-    output_np = np.empty(output_shape, dtype=np.float32)
-    cuda.memcpy_dtoh(output_np, d_output)
+        context.active_optimization_profile = 0
+        context.set_binding_shape(input_idx, input_np.shape)
+        output_shape = context.get_binding_shape(output_idx)
 
-    return output_np
+        d_input = torch.empty(*input_np.shape, dtype=torch.float32, device="cuda")
+        d_output = torch.empty(*output_shape, dtype=torch.float32, device="cuda")
+
+        bindings = [None] * engine.num_bindings
+        bindings[input_idx] = d_input.data_ptr()
+        bindings[output_idx] = d_output.data_ptr()
+
+        stream = torch.cuda.current_stream()
+        d_input.copy_(torch.from_numpy(input_np).cuda())
+        context.execute_async_v2(bindings=bindings, stream_handle=stream.cuda_stream)
+        stream.synchronize()
+
+        return d_output.cpu().numpy()
 
 
 def main():

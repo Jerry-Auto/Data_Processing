@@ -34,9 +34,11 @@ events.out.tfevents.*
 # 模型文件
 checkpoint*.pth
 *.pt
+*.pth
 *.ckpt
 *.h5
 *.onnx
+*.engine
 
 # 数据集相关
 *.npy
@@ -75,4 +77,8 @@ final_notebook_model/
 checkpoints/
 lightning_logs/
 checkpoints_gan/
-libtorch/
+Libtorch/
+TensorRT/
+onnxruntime/
+.claude/
+.sixth/

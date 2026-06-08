@@ -4,8 +4,8 @@ project(tensorrt_demo)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# TensorRT 安装路径（从 tensorrt/cpp/ 回到项目根目录，再进入 TensorRT/）
-set(TRT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../TensorRT" CACHE PATH "TensorRT root directory")
+# TensorRT 安装路径（从 tensorrt/cpp/ 回到项目根目录，再进入 third_party/TensorRT/）
+set(TRT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/TensorRT" CACHE PATH "TensorRT root directory")
 
 # CUDA
 find_package(CUDA REQUIRED)
@@ -23,8 +23,16 @@ target_link_libraries(trt_demo
     ${CUDA_CUDART_LIBRARY}
 )
 
+add_executable(trt_bench benchmark.cpp)
+target_link_libraries(trt_bench
+    nvinfer
+    nvinfer_plugin
+    ${CUDA_LIBRARIES}
+    ${CUDA_CUDART_LIBRARY}
+)
+
 # 运行时能找到 TensorRT 动态库
-set_target_properties(trt_demo PROPERTIES
+set_target_properties(trt_demo trt_bench PROPERTIES
     BUILD_RPATH "${TRT_ROOT}/lib"
     INSTALL_RPATH "${TRT_ROOT}/lib"
 )

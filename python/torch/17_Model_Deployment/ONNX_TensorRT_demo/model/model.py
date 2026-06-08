@@ -1,6 +1,12 @@
 """
 共享模型定义：SimpleMLP
 供 ONNX 和 TensorRT 导出共用
+
+模型规模：~33M 参数
+  首层:  Linear(4, 320)     = 1,600
+  319层: Linear(320, 320)   = 102,720 × 319 = 32,767,680
+  末层:  Linear(320, 3)     = 963
+  合计:  32,770,243 (~33M)
 """
 import torch
 import torch.nn as nn
@@ -9,19 +15,18 @@ import os
 
 class SimpleMLP(nn.Module):
     """
-    简单 3 层 MLP
-    输入: (batch, 4) → 隐藏层: 16 → 输出: (batch, 3)
+    正方形深层 MLP，约 33M 参数
+    输入: (batch, 4) → 320层隐藏层(320) → 输出: (batch, 3)
     """
 
-    def __init__(self, input_dim=4, hidden_dim=16, output_dim=3):
+    def __init__(self, input_dim=4, hidden_dim=320, output_dim=3, num_hidden_layers=320):
         super().__init__()
-        self.net = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, output_dim),
-        )
+        layers = [nn.Linear(input_dim, hidden_dim), nn.ReLU()]
+        for _ in range(num_hidden_layers - 1):
+            layers.append(nn.Linear(hidden_dim, hidden_dim))
+            layers.append(nn.ReLU())
+        layers.append(nn.Linear(hidden_dim, output_dim))
+        self.net = nn.Sequential(*layers)
 
     def forward(self, x):
         return self.net(x)
