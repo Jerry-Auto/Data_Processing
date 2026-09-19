@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="470" viewBox="0 0 900 470" role="img" aria-labelledby="title desc">
+  <title id="title">BEV 网格索引与 LiDAR 物理坐标的映射</title>
+  <desc id="desc">W 列向右对应 LiDAR x 向前，H 行向下对应 LiDAR y 向左。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10Z" fill="#163b65"/></marker>
+    <style>text{font-family:Arial,'Noto Sans CJK SC',sans-serif;fill:#172b4d}.small{font-size:17px}.label{font-size:21px;font-weight:700}.title{font-size:26px;font-weight:700}.grid{stroke:#b9c9da;stroke-width:1}.edge{stroke:#163b65;stroke-width:3}</style>
+  </defs>
+  <rect width="900" height="470" fill="#fbfdff"/>
+  <text x="450" y="38" text-anchor="middle" class="title">模型内部 BEV 张量：索引 (h,w) 与 LiDAR 物理坐标 (x,y)</text>
+  <rect x="290" y="100" width="360" height="280" fill="#edf6ff" class="edge"/>
+  <g class="grid">
+    <path d="M362 100V380 M434 100V380 M506 100V380 M578 100V380"/>
+    <path d="M290 156H650 M290 212H650 M290 268H650 M290 324H650"/>
+  </g>
+  <circle cx="470" cy="240" r="7" fill="#d94b3d"/>
+  <text x="482" y="232" class="small">物理原点附近</text>
+  <text x="470" y="407" text-anchor="middle" class="label">w 增大 / W 向右 ＝ LiDAR x 增大（后方 → 前方）</text>
+  <line x1="300" y1="75" x2="635" y2="75" stroke="#163b65" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="300" y="69" class="small">w=0, x≈−51.2m</text><text x="650" y="69" text-anchor="end" class="small">w=199, x≈+51.2m</text>
+  <line x1="245" y1="110" x2="245" y2="370" stroke="#163b65" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="45" y="225" class="label">h 增大 / H 向下</text><text x="45" y="252" class="small">＝ LiDAR y 增大</text><text x="45" y="278" class="small">（右侧 → 左侧）</text>
+  <text x="670" y="122" class="small">h=0：y≈−51.2m</text><text x="670" y="148" class="small">物理右侧</text>
+  <text x="670" y="355" class="small">h=199：y≈+51.2m</text><text x="670" y="381" class="small">物理左侧</text>
+  <text x="290" y="442" class="small">注意：人眼看到的“上/下”由数组行号决定；它不是常见的“车辆前方朝上”的可视化布局。</text>
+</svg>

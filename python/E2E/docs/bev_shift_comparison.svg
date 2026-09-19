@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="430" viewBox="0 0 980 430" role="img" aria-labelledby="title desc">
+  <title id="title">标准局部位移与源码 shift 的比较</title>
+  <desc id="desc">源码 shift 的 W H 分量为负 yE 和 xE，与标准 xE yE 直接映射相差九十度。</desc>
+  <defs>
+    <marker id="blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10Z" fill="#2374ab"/></marker>
+    <marker id="orange" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10Z" fill="#e2792b"/></marker>
+    <style>text{font-family:Arial,'Noto Sans CJK SC',sans-serif;fill:#172b4d}.title{font-size:26px;font-weight:700}.head{font-size:20px;font-weight:700}.small{font-size:16px}.formula{font-family:serif;font-size:20px}.axis{stroke:#627d98;stroke-width:2}</style>
+  </defs>
+  <rect width="980" height="430" fill="#fbfdff"/>
+  <text x="490" y="36" text-anchor="middle" class="title">标准物理局部位移与本仓库 shift 源码的关系</text>
+  <line x1="350" y1="270" x2="350" y2="105" class="axis" marker-end="url(#blue)"/><text x="362" y="122" class="small">H / y_E（左方）</text>
+  <line x1="350" y1="270" x2="535" y2="270" class="axis" marker-end="url(#blue)"/><text x="462" y="294" class="small">W / x_E（前方）</text>
+  <circle cx="350" cy="270" r="5" fill="#172b4d"/>
+  <line x1="350" y1="270" x2="482" y2="174" stroke="#2374ab" stroke-width="5" marker-end="url(#blue)"/>
+  <text x="440" y="165" class="head" fill="#2374ab">标准直接映射：(Δx_E, Δy_E)</text>
+  <line x1="350" y1="270" x2="254" y2="138" stroke="#e2792b" stroke-width="5" marker-end="url(#orange)"/>
+  <text x="57" y="126" class="head" fill="#e2792b">源码：(−Δy_E, Δx_E)</text>
+  <path d="M455 260 A105 105 0 0 0 360 165" fill="none" stroke="#e2792b" stroke-width="3" marker-end="url(#orange)"/>
+  <text x="379" y="208" class="small" fill="#e2792b">+90°</text>
+  <rect x="605" y="105" width="315" height="210" rx="12" fill="#fff6ed" stroke="#e2792b" stroke-width="2"/>
+  <text x="627" y="142" class="head">源码等式</text>
+  <text x="627" y="181" class="formula">ΔW_code = −Δy_E</text>
+  <text x="627" y="214" class="formula">ΔH_code =  Δx_E</text>
+  <text x="627" y="258" class="small">这不是 H 行号向下带来的视觉镜像；</text>
+  <text x="627" y="283" class="small">它是加到数值坐标 (W,H) 的实现约定。</text>
+  <text x="490" y="385" text-anchor="middle" class="small">因此：显示方向、物理坐标换算、源码 shift 的既有约定，必须分开讨论。</text>
+</svg>
