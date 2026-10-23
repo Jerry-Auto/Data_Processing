@@ -1,0 +1,37 @@
+[
+  {
+    "ode_steps": 8,
+    "nearest_mode_rmse": 0.34168776869773865,
+    "target_nll": 2.0949697494506836
+  },
+  {
+    "ode_steps": 16,
+    "nearest_mode_rmse": 0.32250964641571045,
+    "target_nll": 1.9635686874389648
+  },
+  {
+    "ode_steps": 24,
+    "nearest_mode_rmse": 0.31803062558174133,
+    "target_nll": 1.9339334964752197
+  },
+  {
+    "ode_steps": 50,
+    "nearest_mode_rmse": 0.3143770694732666,
+    "target_nll": 1.910064697265625
+  },
+  {
+    "ode_steps": 100,
+    "nearest_mode_rmse": 0.3130393922328949,
+    "target_nll": 1.9013943672180176
+  },
+  {
+    "ode_steps": 200,
+    "nearest_mode_rmse": 0.31245335936546326,
+    "target_nll": 1.8976075649261475
+  },
+  {
+    "ode_steps": "real target",
+    "nearest_mode_rmse": 0.3130050301551819,
+    "target_nll": 1.9011720418930054
+  }
+]
